@@ -4,7 +4,7 @@ namespace ShopSports.Api.Services
 {
     public class PriceService : IPriceService
     {
-        private readonly Random _random = new ();
+        private readonly Random _random = new();
 
         public async Task FillPricesAsync(IEnumerable<Product> products)
         {
