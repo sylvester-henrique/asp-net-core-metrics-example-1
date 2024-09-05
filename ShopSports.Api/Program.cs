@@ -16,11 +16,15 @@ builder.Services.AddSingleton<IInventoryService, InventoryService>();
 
 // Metrics configuration.
 
-builder.Services.AddOpenTelemetry()
-    .ConfigureResource(resource => resource.AddService(builder.Environment.ApplicationName))
-    .WithMetrics(metrics => metrics
-        .AddAspNetCoreInstrumentation()
-        .AddConsoleExporter());
+var openTelemetryBuilder = builder.Services.AddOpenTelemetry();
+
+openTelemetryBuilder.ConfigureResource(resource => resource
+    .AddService(builder.Environment.ApplicationName));
+
+openTelemetryBuilder.WithMetrics(metrics => metrics
+    .AddAspNetCoreInstrumentation()
+    .AddConsoleExporter()
+    .AddPrometheusExporter());
 
 var app = builder.Build();
 
@@ -29,5 +33,8 @@ var app = builder.Build();
 app.UseAuthorization();
 
 app.MapControllers();
+
+// Configure the Prometheus scraping endpoint
+app.MapPrometheusScrapingEndpoint();
 
 app.Run();
