@@ -16,9 +16,8 @@ builder.Services.AddSingleton<IInventoryService, InventoryService>();
 
 // Metrics configuration.
 
-var serviceName = "shop-sports";
 builder.Services.AddOpenTelemetry()
-    .ConfigureResource(resource => resource.AddService(serviceName))
+    .ConfigureResource(resource => resource.AddService(builder.Environment.ApplicationName))
     .WithMetrics(metrics => metrics
         .AddAspNetCoreInstrumentation()
         .AddConsoleExporter());
