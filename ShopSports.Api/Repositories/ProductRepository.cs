@@ -1,4 +1,5 @@
-﻿using ShopSports.Api.Models;
+﻿using ShopSports.Api.Helpers;
+using ShopSports.Api.Models;
 
 namespace ShopSports.Api.Repositories
 {
@@ -14,9 +15,20 @@ namespace ShopSports.Api.Repositories
 
         public async Task<IEnumerable<Product>> GetAsync()
         {
-            var delay = new Random().Next(100, 2000);
-            await Task.Delay(delay);
-            return _products;
+            try
+            {
+                var delay = new Random().Next(100, 2000);
+                await Task.Delay(delay);
+
+                ErrorGenerator.Execute("Failed to get products");
+
+                return _products;
+            }
+            catch (Exception)
+            {
+                // Register metric.
+                throw;
+            }
         }
     }
 }

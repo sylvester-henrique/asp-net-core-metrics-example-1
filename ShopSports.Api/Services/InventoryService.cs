@@ -1,4 +1,5 @@
-﻿using ShopSports.Api.Models;
+﻿using ShopSports.Api.Helpers;
+using ShopSports.Api.Models;
 
 namespace ShopSports.Api.Services
 {
@@ -8,11 +9,22 @@ namespace ShopSports.Api.Services
 
         public async Task FillAvailabilityAsync(IEnumerable<Product> products)
         {
-            var delay = new Random().Next(100, 500);
-            await Task.Delay(delay);
-            foreach (var product in products)
+            try
             {
-                product.IsAvailable = _random.Next(2) == 1;
+                var delay = new Random().Next(100, 500);
+                await Task.Delay(delay);
+
+                ErrorGenerator.Execute("Failed to fill products availability.");
+
+                foreach (var product in products)
+                {
+                    product.IsAvailable = _random.Next(2) == 1;
+                }
+            }
+            catch (Exception)
+            {
+                // Register metric.
+                throw;
             }
         }
     }
