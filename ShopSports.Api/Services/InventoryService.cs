@@ -8,7 +8,7 @@ namespace ShopSports.Api.Services
 
         public async Task FillAvailabilityAsync(IEnumerable<Product> products)
         {
-            var delay = _random.Next(750);
+            var delay = new Random().Next(100, 500);
             await Task.Delay(delay);
             foreach (var product in products)
             {

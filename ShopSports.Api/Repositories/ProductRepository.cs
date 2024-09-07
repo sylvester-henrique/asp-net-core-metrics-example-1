@@ -14,7 +14,7 @@ namespace ShopSports.Api.Repositories
 
         public async Task<IEnumerable<Product>> GetAsync()
         {
-            var delay = new Random().Next(300, 1000);
+            var delay = new Random().Next(100, 2000);
             await Task.Delay(delay);
             return _products;
         }
