@@ -11,9 +11,7 @@ namespace ShopSports.Api.Services
         {
             try
             {
-                var delay = new Random().Next(100, 500);
-                await Task.Delay(delay);
-
+                await Delayer.ExecuteAsync(500);
                 ErrorGenerator.Execute("Failed to fill products availability.");
 
                 foreach (var product in products)

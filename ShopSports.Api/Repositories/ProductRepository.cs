@@ -17,11 +17,8 @@ namespace ShopSports.Api.Repositories
         {
             try
             {
-                var delay = new Random().Next(100, 2000);
-                await Task.Delay(delay);
-
+                await Delayer.ExecuteAsync(2000);
                 ErrorGenerator.Execute("Failed to get products");
-
                 return _products;
             }
             catch (Exception)
