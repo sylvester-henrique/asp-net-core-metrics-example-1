@@ -1,10 +1,18 @@
 ﻿using ShopSports.Api.Helpers;
+using ShopSports.Api.Metrics;
 using ShopSports.Api.Models;
 
 namespace ShopSports.Api.Repositories
 {
     public class ProductRepository : IProductRepository
     {
+        private readonly IProductsMetrics _productsMetrics;
+
+        public ProductRepository(IProductsMetrics productsMetrics)
+        {
+            _productsMetrics = productsMetrics;
+        }
+
         private readonly Product[] _products = [
             new Product { Id = 1, Name = "Nike Air Max Shoes" },
             new Product { Id = 2, Name = "Adidas T-Shirt" },
@@ -18,12 +26,12 @@ namespace ShopSports.Api.Repositories
             try
             {
                 await Delayer.ExecuteAsync(2000);
-                ErrorGenerator.Execute("Failed to get products");
+                ErrorGenerator.Execute(5, "Failed to get products");
                 return _products;
             }
             catch (Exception)
             {
-                // Register metric.
+                _productsMetrics.RegisterError(GetProductError.QueryProducts);
                 throw;
             }
         }

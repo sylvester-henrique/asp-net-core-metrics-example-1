@@ -1,10 +1,18 @@
 ﻿using ShopSports.Api.Helpers;
+using ShopSports.Api.Metrics;
 using ShopSports.Api.Models;
 
 namespace ShopSports.Api.Services
 {
     public class PriceService : IPriceService
     {
+        private readonly IProductsMetrics _productsMetrics;
+
+        public PriceService(IProductsMetrics productsMetrics)
+        {
+            _productsMetrics = productsMetrics;
+        }
+
         private readonly Random _random = new();
 
         public async Task FillPricesAsync(IEnumerable<Product> products)
@@ -12,7 +20,7 @@ namespace ShopSports.Api.Services
             try
             {
                 await Delayer.ExecuteAsync(500);
-                ErrorGenerator.Execute("Failed to fill product prices.");
+                ErrorGenerator.Execute(20, "Failed to fill product prices.");
 
                 foreach (var product in products)
                 {
@@ -22,7 +30,7 @@ namespace ShopSports.Api.Services
             }
             catch (Exception)
             {
-                // Register metric.
+                _productsMetrics.RegisterError(GetProductError.FillPrices);
                 throw;
             }
         }
